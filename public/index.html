@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>React App</title>
+  </head>
+  <body>
+    <h1>Chat App</h1>
+
+    <form id="form">
+      <input id="input" placeholder="Enter text here" />
+      <button id="button">Submit</button>
+    </form>
+    <div id="container"></div>
+  </body>
+</html>
+<script src="/socket.io/socket.io.js"></script>
+<script>
+  const socket = io();
+  // setTimeout(()=>{
+  //     socket.emit("client message","Actial message by timeout")
+  // },3000)
+
+  const name = prompt("please enter name:");
+  socket.emit("username", name);
+  const input = document.getElementById("input");
+  const form = document.getElementById("form");
+  const container = document.getElementById("container");
+  form.addEventListener("submit", (e) => {
+    e.preventDefault();
+    socket.emit("client message", input.value);
+    input.value = ""; // clear input after sending
+  });
+
+  socket.on("message from server", (msg) => {
+    const p = document.createElement("p");
+    p.innerText = msg;
+    container.appendChild(p);
+  });
+</script>
